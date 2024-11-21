@@ -3,31 +3,30 @@ import Data from "../models/User.js";
 
 class UserController {
   static browse(req, res) {
-    const page = parseInt(req.query.page) || 1;
-    const operation = req.query.operation || "OR";
-    const filter = {
+    const page = parseInt(req.query.page) || 1; // ambil nomor page dari query string
+    const operation = req.query.operation || "OR"; // ambil operasi logika dari query string
+    const filter = { // Buat Object Filter untuk cari berdasarkan parameter
       name: req.query.search,
       height: req.query.height,
       weight: req.query.weight,
       startDate: req.query.startdate,
       endDate: req.query.enddate,
-      isMarried:
+      isMarried: // Konversi nilai string menjadi angka
         req.query.married === "true"
           ? 1
           : req.query.married === "false"
           ? 0
           : undefined
-      // operation: req.query.operation || 'AND' // Default ke AND jika tidak ada
     };
-    console.log(filter);
+    //console.log(filter);
 
-    Data.getAll(page, 5, filter, operation, (err, data, totalPages) => {
+    Data.getAll(page, 5, filter, operation, (err, data, totalPages) => { // ** Tampilkan Daftar User
       
       if (err) {
         res.status(500).json({ error: err.message });
         return;
       }
-      res.render("index", {
+      res.render("index", { // ** Tampilkan Daftar User
         data,
         page,
         filter,
@@ -41,7 +40,7 @@ class UserController {
   static add(req, res) {
     if (req.method === "GET") {
       res.render("add");
-    } else {
+    } else { // ** POST
       Data.add(req.body, (err) => {
         if (err) {
           res.status(500).json({ error: err.message });
@@ -61,7 +60,7 @@ class UserController {
         }
         res.render("edit", { data });
       });
-    } else {
+    } else { // ** POST
       Data.update(req.params.id, req.body, (err) => {
         console.log(req.body);
 

@@ -5,7 +5,7 @@ class Data {
     static getAll(page = 1, limit = 5, filter = {}, operation = 'OR', callback) {
         let countQuery = "SELECT COUNT(*) as total FROM data WHERE 1=1";
         let query = "SELECT * FROM data WHERE 1=1";
-        const params = [];
+        const params = []; // Array untuk Menyimpan parameter yang akan digunakan dalam query
         const countParams = [];
         const conditions = [];
 
