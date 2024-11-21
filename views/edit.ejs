@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+    <title>SQLite BREAD and Pagination</title>
+  </head>
+  <body class="body-edit">
+    <div class="container-edit">
+      <!-- Judul -->
+      <div class="title">
+        <h1>Updating Data</h1>
+      </div>
+      <!-- Form Edit -->
+      <div class="form-edit">
+        <form method="POST">
+          <div class="form-edit-group">
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input type="text" name="name" value="<%= data.name %>" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Height</label>
+              <input type="number" name="height" value="<%= data.height %>" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Weight</label>
+              <input type="number" step="0.01" name="weight" value="<%= data.weight %>" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Birthdate</label>
+              <input type="date" name="birthdate" value="<%= data.birthdate %>" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Married</label>
+              <div class="radio-group" style="display: flex; flex-direction: column; gap: 0;">
+                <label>
+                  <input type="radio" name="married" value="false" <%= !data.married ? "checked" : "" %> /> Not Yet
+                </label>
+                <label>
+                  <input type="radio" name="married" value="true" <%= data.married ? "checked" : "" %> /> Yes
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="footer-edit">
+            <button type="submit" class="btn-add">Save</button>
+            <button type="button" class="btn-cancel"><a href="/">Cancel</a></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

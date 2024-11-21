@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQLite BREAD and Pagination</title>
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Judul -->
+      <div class="title">
+        <h1>SQLite BREAD(Browse, Read, Edit, Add, Delete) and Pagination</h1>
+      </div>
+      <!-- Form Pencarian -->
+      <div class="search-form">
+        <form method="GET">
+          <div class="search-controls">
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input type="text" name="search" placeholder="insert your name" value="<%= filter.name || '' %>" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Height</label>
+              <input
+                type="number"
+                name="height"
+                placeholder="insert your height"
+                value="<%= filter.height || '' %>"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Weight</label>
+              <input
+                type="number"
+                step="0.01"
+                name="weight"
+                placeholder="insert your weight"
+                value="<%= filter.weight || '' %>"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Birth Date</label>
+              <input type="date" name="startdate" placeholder="dd/mm/yyyy" value="<%= filter.startDate || '' %>" />
+              <span style="margin: 0 10px">s.d.</span>
+              <input type="date" name="enddate" placeholder="dd/mm/yyyy" value="<%= filter.endDate || '' %>" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Is Married</label>
+              <select name="married">
+                <option value="">-select married-</option>
+                <option value="true" <%= filter.married === 'true' ? 'selected' : '' %>>Yes</option>
+                <option value="false" <%= filter.married === 'false' ? 'selected' : '' %>>Not Yet</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Operation</label>
+              <div class="radio-group">
+                <label
+                  ><input type="radio" name="operation" value="OR" <%= operation === 'OR' ? 'checked' : '' %> />
+                  OR</label
+                >
+                <label
+                  ><input type="radio" name="operation" value="AND" <%= operation === 'AND' ? 'checked' : '' %> />
+                  AND</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="button-group">
+            <button type="submit" class="btn btn-search">Search</button>
+            <button type="button" onclick="resetForm()" class="btn btn-reset">Reset</button>
+          </div>
+        </form>
+      </div>
+      <div class="line"></div>
+
+      <!-- Data -->
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th>Height</th>
+            <th>Weight</th>
+            <th>Birth Date</th>
+            <th>Is Married</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.forEach((item, index) => { %>
+          <tr>
+            <td><%= (page - 1) * 5 + index + 1 %></td>
+            <td><%= item.name %></td>
+            <td><%= item.height %></td>
+            <td><%= item.weight %></td>
+            <td><%= item.birthdate %></td>
+            <td><%= item.married ? "Yes" : "Not Yet" %></td>
+            <td>
+              <a href="/edit/<%= item.id %>" class="btn-update">Update</a>
+              <a
+                href="/delete/<%= item.id %>"
+                class="btn-delete"
+                onclick="return confirm('Apakah kamu yakin untuk menghapus data <%= item.name %>')"
+                >Delete</a
+              >
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <!-- Footer Button -->
+      <div class="footer">
+        <button class="btn-add"><a href="/add">Add</a></button>
+        <!-- Pagination -->
+        <div class="pagination">
+          <a href="?page=<%= page > 1 ? page - 1 : 1 %>">&laquo;</a>
+          
+          <% for(let i = 1; i <= totalPages; i++) { %>
+            <a href="?page=<%= i %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+          <% } %>
+          
+          <a href="?page=<%= page < totalPages ? page + 1 : totalPages %>">&raquo;</a>
+        </div>
+      </div>
+    </div>
+    <script>
+    function resetForm() {
+      window.location.href = '/';
+    }
+    </script>
+  </body>
+</html>
