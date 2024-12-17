@@ -1,0 +1,347 @@
+PENJELASAN APLIKASI BREAD DENGAN SQLite
+=====================================
+
+1. STRUKTUR APLIKASI
+-------------------
+Aplikasi ini menggunakan arsitektur MVC (Model-View-Controller):
+- Model (User.js): Menangani operasi database
+- View (file-file .ejs): Tampilan untuk user
+- Controller (UserController.js): Logika bisnis
+- app.js: File utama yang menjalankan server
+
+2. ALUR APLIKASI
+---------------
+a) Browse (Melihat Data):
+   - User mengakses route "/"
+   - UserController.browse dipanggil
+   - Model getAll() mengambil data dari SQLite
+   - Data ditampilkan di view index.ejs
+   - Fitur tambahan: 
+     * Pagination (pembagian halaman)
+     * Filter pencarian (nama, tinggi, berat, tanggal lahir, status nikah)
+     * Operasi logika AND/OR untuk filter
+
+b) Add (Tambah Data):
+   - User mengakses route "/add"
+   - GET: Menampilkan form tambah data
+   - POST: Menyimpan data ke database
+   - Alur:
+     1. User isi form
+     2. Data dikirim ke controller
+     3. Controller memanggil Model.add()
+     4. Data tersimpan di SQLite
+     5. Redirect ke halaman utama
+
+c) Edit (Ubah Data):
+   - User mengakses route "/edit/:id"
+   - GET: Menampilkan form edit dengan data yang ada
+   - POST: Menyimpan perubahan ke database
+   - Alur:
+     1. Data lama diambil dan ditampilkan di form
+     2. User ubah data
+     3. Controller memanggil Model.update()
+     4. Data terupdate di SQLite
+     5. Redirect ke halaman utama
+
+d) Delete (Hapus Data):
+   - User mengakses route "/delete/:id"
+   - Controller memanggil Model.delete()
+   - Data terhapus dari database
+   - Redirect ke halaman utama
+
+3. FITUR KHUSUS
+--------------
+a) Pagination:
+   - Membagi data menjadi beberapa halaman
+   - Default: 5 data per halaman
+   - Menggunakan LIMIT dan OFFSET di query SQLite
+
+b) Filter Data:
+   - Pencarian berdasarkan:
+     * Nama (LIKE)
+     * Tinggi (=)
+     * Berat (=)
+     * Tanggal Lahir (BETWEEN)
+     * Status Pernikahan (=)
+   - Bisa menggunakan operasi AND/OR
+
+4. PENANGANAN DATABASE
+--------------------
+- Menggunakan SQLite3
+- Query-query yang digunakan:
+  * SELECT: untuk mengambil data
+  * INSERT: untuk menambah data
+  * UPDATE: untuk mengubah data
+  * DELETE: untuk menghapus data
+- Menggunakan parameter binding (?) untuk keamanan
+
+5. KEAMANAN
+----------
+- Menggunakan parameter binding untuk mencegah SQL Injection
+- Validasi input di sisi server
+- Penanganan error untuk setiap operasi database
+
+6. TIPS PENGEMBANGAN
+------------------
+- Pastikan database SQLite sudah dibuat
+- Jalankan server dengan "node app.js"
+- Server berjalan di port 3000
+- Akses aplikasi di browser: http://localhost:3000
+
+7. CATATAN PENTING
+----------------
+- Setiap operasi database menggunakan callback
+- Status pernikahan disimpan sebagai 1 (true) atau 0 (false)
+- Query string digunakan untuk filter dan pagination
+- Semua error ditangani dengan try-catch atau callback
+- Menggunakan EJS sebagai template engine
+
+8. PENGEMBANGAN LANJUTAN
+----------------------
+Beberapa ide pengembangan:
+- Tambah autentikasi user
+- Validasi input lebih lengkap
+- Export data ke CSV/Excel
+- Upload gambar
+- API endpoints
+- Unit testing
+
+PENJELASAN KODE APP.JS - APLIKASI EXPRESS.JS
+=============================================
+
+1. IMPORT DEPENDENCIES
+--------------------
+- Import express: Framework web untuk Node.js yang memudahkan pembuatan aplikasi web
+- Import UserController: Controller yang berisi logika untuk menangani operasi user
+- Import path: Modul Node.js untuk menangani path/lokasi file
+
+2. SETUP APLIKASI EXPRESS
+------------------------
+- Membuat aplikasi express dengan 'const app = express()'
+- Mengatur view engine menggunakan EJS untuk template HTML
+- Mengaktifkan parsing body untuk form data dengan 'express.urlencoded'
+- Mengatur folder 'public' untuk file statis (CSS, gambar, dll)
+
+3. RUTE-RUTE APLIKASI (ROUTES)
+-----------------------------
+Aplikasi memiliki 6 rute utama:
+
+a) Tampilan Daftar User
+   GET "/"
+   - Menampilkan halaman utama dengan daftar semua user
+   - Menggunakan UserController.browse
+
+b) Tambah User
+   GET "/add"
+   - Menampilkan form untuk menambah user baru
+   - Menggunakan UserController.add
+   
+   POST "/add"
+   - Memproses data form untuk menambah user
+   - Data dikirim ke UserController.add
+
+c) Edit User
+   GET "/edit/:id"
+   - Menampilkan form edit untuk user tertentu
+   - :id adalah parameter yang berisi ID user
+   - Menggunakan UserController.edit
+   
+   POST "/edit/:id"
+   - Memproses perubahan data user
+   - Data dikirim ke UserController.edit
+
+d) Hapus User
+   GET "/delete/:id"
+   - Menghapus user berdasarkan ID
+   - Menggunakan UserController.delete
+
+4. MENJALANKAN SERVER
+--------------------
+- Server berjalan di port 3000
+- Menampilkan pesan konfirmasi di console saat server aktif
+
+ALUR APLIKASI:
+-------------
+1. User membuka website → hit route "/"
+2. Server menampilkan daftar user
+3. User bisa:
+   - Menambah user baru melalui form di /add
+   - Mengedit user yang ada melalui form di /edit/:id
+   - Menghapus user melalui link /delete/:id
+
+POLA MVC:
+---------
+- Model: (tidak terlihat di kode ini, mungkin di file terpisah)
+- View: Menggunakan template EJS
+- Controller: UserController menangani logika bisnis
+
+CATATAN UNTUK PEMULA:
+--------------------
+- Ini adalah struktur dasar aplikasi web dengan Express.js
+- Menggunakan metode HTTP: GET untuk membaca, POST untuk mengirim data
+- Parameter :id di URL memungkinkan akses ke user spesifik
+- Controller memisahkan logika bisnis dari route
+
+PENJELASAN DETAIL USER CONTROLLER
+================================
+
+1. STRUKTUR DASAR
+----------------
+- File ini adalah controller yang mengatur logika untuk mengelola data user
+- Menggunakan class UserController dengan beberapa method static
+- Import modul EJS untuk rendering view dan model User untuk akses database
+
+2. METHOD BROWSE
+---------------
+Fungsi untuk menampilkan daftar user dengan fitur:
+a) Pagination (Pembagian halaman):
+   - Mengambil parameter 'page' dari URL (default: halaman 1)
+   - Menampilkan 5 data per halaman
+
+b) Filtering (Penyaringan data):
+   - Bisa mencari berdasarkan: nama, tinggi, berat, tanggal, status pernikahan
+   - Parameter filter diambil dari query URL
+   - Ada 2 mode operasi filter: OR atau AND
+   - Status pernikahan dikonversi:
+     * "true" → 1
+     * "false" → 0
+     * tidak ada → undefined
+
+c) Rendering:
+   - Menampilkan data ke view "index"
+   - Menyertakan informasi: data user, halaman aktif, filter aktif, total halaman
+
+3. METHOD ADD
+------------
+Fungsi untuk menambah user baru:
+- GET: Menampilkan form tambah user
+- POST: Menyimpan data user baru ke database
+- Jika berhasil: redirect ke halaman utama
+- Jika error: tampilkan pesan error
+
+4. METHOD EDIT
+-------------
+Fungsi untuk mengubah data user:
+a) GET:
+   - Mengambil data user berdasarkan ID
+   - Mengkonversi nilai married (1/0 → true/false)
+   - Menampilkan form edit dengan data yang ada
+
+b) POST:
+   - Menyimpan perubahan data ke database
+   - Redirect ke halaman utama jika berhasil
+   - Tampilkan error jika gagal
+
+5. METHOD DELETE
+---------------
+Fungsi untuk menghapus user:
+- Menghapus data berdasarkan ID
+- Redirect ke halaman utama jika berhasil
+- Tampilkan error jika gagal
+
+ALUR PENGGUNAAN
+---------------
+1. User membuka aplikasi → method browse dipanggil
+2. User bisa:
+   - Mencari/filter data
+   - Pindah halaman
+   - Tambah user baru
+   - Edit user yang ada
+   - Hapus user
+
+PENANGANAN ERROR
+---------------
+- Setiap operasi database memiliki penanganan error
+- Jika terjadi error, akan menampilkan pesan dengan status 500
+- Menggunakan callback function untuk handle asynchronous operation
+
+TIPS PEMAHAMAN
+-------------
+- Pahami konsep HTTP method (GET/POST)
+- Pelajari cara kerja query parameter di URL
+- Mengerti konsep callback function
+- Pahami konversi tipe data (string ke number, dll)
+
+PENJELASAN KODE Data.js
+=======================
+
+1. PENDAHULUAN
+--------------
+File ini berisi class Data yang menangani operasi database untuk tabel 'data'. File menggunakan SQLite sebagai database dan berisi method-method untuk operasi CRUD (Create, Read, Update, Delete).
+
+2. IMPORT DAN SETUP
+------------------
+- Mengimport sqlite3 untuk mengelola database
+- Membuat koneksi ke database di './database/data.db'
+
+3. METHOD-METHOD UTAMA
+---------------------
+
+a) getAll()
+-----------
+Parameter:
+- page: halaman yang diminta (default: 1)
+- limit: jumlah data per halaman (default: 5)
+- filter: objek berisi filter pencarian
+- operation: operator untuk menggabungkan filter ("OR"/"AND")
+- callback: function yang dipanggil setelah query selesai
+
+Cara Kerja:
+1. Membuat query dasar untuk menghitung total data dan mengambil data
+2. Menerapkan filter berdasarkan:
+   - Nama (menggunakan LIKE untuk pencarian partial)
+   - Tinggi (exact match)
+   - Berat (exact match)
+   - Tanggal Lahir (menggunakan BETWEEN atau >= atau <=)
+   - Status Pernikahan (true/false)
+3. Menghitung total halaman
+4. Menerapkan pagination
+5. Mengembalikan data melalui callback
+
+b) add()
+--------
+- Menambah data baru ke database
+- Mengkonversi nilai married dari string "true"/"false" ke 1/0
+- Parameter: data (objek berisi name, height, weight, birthdate, married)
+
+c) update()
+-----------
+- Mengupdate data existing berdasarkan ID
+- Mengkonversi nilai married seperti method add()
+- Parameter: id dan data yang akan diupdate
+
+d) delete()
+-----------
+- Menghapus data berdasarkan ID
+- Simple query DELETE dengan parameter id
+
+e) getById()
+------------
+- Mengambil satu data berdasarkan ID
+- Menggunakan db.get() karena hanya mengambil satu baris
+
+4. FITUR KHUSUS
+--------------
+1. Pagination
+   - Menggunakan LIMIT dan OFFSET
+   - Menghitung total halaman dengan Math.ceil()
+
+2. Dynamic Filtering
+   - Filter bisa dikombinasi dengan OR/AND
+   - Menggunakan parameter array untuk mencegah SQL injection
+   - Mendukung berbagai tipe pencarian (LIKE, =, BETWEEN)
+
+5. BEST PRACTICES YANG DITERAPKAN
+--------------------------------
+1. Penggunaan Parameterized Query untuk keamanan
+2. Error handling melalui callback
+3. Modular design dengan static methods
+4. Flexible filtering system
+5. Pagination untuk performa
+
+6. CATATAN PENTING
+-----------------
+- Semua operasi database bersifat asynchronous
+- Menggunakan callback pattern untuk handling hasil
+- Nilai boolean untuk married disimpan sebagai integer (1/0)
+- Filter bersifat optional dan fleksibel

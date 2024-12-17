@@ -47,10 +47,10 @@
             </div>
             <div class="form-group">
               <label class="form-label">Is Married</label>
-              <select name="married">
-                <option value="">-select married-</option>
-                <option value="true" <%= filter.married === 'true' ? 'selected' : '' %>>Yes</option>
-                <option value="false" <%= filter.married === 'false' ? 'selected' : '' %>>Not Yet</option>
+              <select name="married" onchange="married()">
+                <option value="" >-select married-</option>
+                <option value="true" <%= filter.isMarried === 1 ? 'selected' : '' %>>Yes</option>
+                <option value="false" <%= filter.isMarried === 0 ? 'selected' : '' %>>Not Yet</option>
               </select>
             </div>
             <div class="form-group">
@@ -115,13 +115,13 @@
         <button class="btn-add"><a href="/add">Add</a></button>
         <!-- Pagination -->
         <div class="pagination">
-          <a href="?page=<%= page > 1 ? page - 1 : 1 %>">&laquo;</a>
+          <a href="?page=<%= page > 1 ? page - 1 : 1 %>&search=<%= filter.name || '' %>&height=<%= filter.height || '' %>&weight=<%= filter.weight || '' %>&startdate=<%= filter.startDate || '' %>&enddate=<%= filter.endDate || '' %>&married=<%= filter.isMarried !== undefined ? (filter.isMarried === 1 ? 'true' : 'false') : '' %>&operation=<%= operation %>">&laquo;</a>
           
           <% for(let i = 1; i <= totalPages; i++) { %>
-            <a href="?page=<%= i %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+            <a href="?page=<%= i %>&search=<%= filter.name || '' %>&height=<%= filter.height || '' %>&weight=<%= filter.weight || '' %>&startdate=<%= filter.startDate || '' %>&enddate=<%= filter.endDate || '' %>&married=<%= filter.isMarried !== undefined ? (filter.isMarried === 1 ? 'true' : 'false') : '' %>&operation=<%= operation %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
           <% } %>
           
-          <a href="?page=<%= page < totalPages ? page + 1 : totalPages %>">&raquo;</a>
+          <a href="?page=<%= page < totalPages ? page + 1 : totalPages %>&search=<%= filter.name || '' %>&height=<%= filter.height || '' %>&weight=<%= filter.weight || '' %>&startdate=<%= filter.startDate || '' %>&enddate=<%= filter.endDate || '' %>&married=<%= filter.isMarried !== undefined ? (filter.isMarried === 1 ? 'true' : 'false') : '' %>&operation=<%= operation %>">&raquo;</a>
         </div>
       </div>
     </div>
