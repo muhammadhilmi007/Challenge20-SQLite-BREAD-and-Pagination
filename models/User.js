@@ -60,8 +60,9 @@ class Data {
     // Filter berdasarkan status pernikahan (1/0)
     if (filter.isMarried !== undefined) {
       conditions.push("married = ?");
-      params.push(filter.isMarried);
-      countParams.push(filter.isMarried);
+      const marriedValue = filter.isMarried === "true" || filter.isMarried === 1 ? 1 : 0;
+      params.push(marriedValue);
+      countParams.push(marriedValue);
     }
 
     // Menambahkan WHERE clause jika ada kondisi

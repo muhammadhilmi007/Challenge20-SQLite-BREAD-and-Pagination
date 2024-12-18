@@ -36,10 +36,10 @@
               <label class="form-label">Married</label>
               <div class="radio-group" style="display: flex; flex-direction: column; gap: 0;">
                 <label>
-                  <input type="radio" name="married" value="false" <%= !data.married ? "checked" : "" %> /> Not Yet
+                  <input type="radio" name="married" value="false" <%= data.married === "false" || data.married === 0 ? "checked" : "" %> /> Not Yet
                 </label>
                 <label>
-                  <input type="radio" name="married" value="true" <%= data.married ? "checked" : "" %> /> Yes
+                  <input type="radio" name="married" value="true" <%= data.married === "true" || data.married === 1 ? "checked" : "" %> /> Yes
                 </label>
               </div>
             </div>
